@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html class="dark" lang="sv">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Trenad Nordic Måleri - Premium Måleritjänster i Stockholm</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f39200",
+                        "secondary": "#009fe3",
+                        "accent": "#89d1f5",
+                        "background-dark": "#050608",
+                        "card-dark": "#111418",
+                        "border-dark": "#21262d",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.375rem", "lg": "0.75rem", "xl": "1.25rem", "2xl": "1.5rem", "3xl": "2.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #050608;
+            color: #e5e7eb;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        ::selection {
+            background-color: rgba(243, 146, 0, 0.3);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-1 {
+            font-variation-settings: 'FILL' 1;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, white, white, #6b7280);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Page transitions */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Smooth animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        
+        /* Calendar styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        /* Hover effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .mobile-menu.open {
+            max-height: 400px;
+        }
+        
+        /* Before/After slider */
+        .before-after-slider {
+            position: relative;
+            overflow: hidden;
+        }
+        .before-after-slider .before-image {
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(0 0, 45% 0, 45% 100%, 0 100%);
+            filter: contrast(0.8) grayscale(0.2);
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111418;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            z-index: 1000;
+            transition: bottom 0.5s ease;
+        }
+        .toast.show {
+            bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="sticky top-0 z-50 w-full bg-[#050608]/80 backdrop-blur-xl border-b border-white/5">
+            <div class="max-w-[1280px] mx-auto px-6 py-5 flex items-center justify-between">
+                <a href="#" onclick="navigateTo('home'); return false;" class="flex items-center gap-4 group cursor-pointer">
+                    <img src="data:image/png;base64,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" alt="Trenad Nordic Måleri" class="h-10 w-auto group-hover:scale-110 transition-transform duration-300"/>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-lg font-extrabold tracking-tight text-white uppercase">Trenad Nordic</span>
+                        <span class="text-[10px] tracking-[0.2em] font-medium text-[#f39200] uppercase">Måleri</span>
+                    </div>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-10">
+                    <a href="#" onclick="navigateTo('home'); return false;" class="nav-link text-sm font-semibold text-gray-400 hover:text-white transition-colors" data-page="home">Tjänster</a>
+                    <a href="#" onclick="navigateTo('portfolio'); return false;" class="nav-link text-sm font-semibold text-gray-400 hover:text-white transition-colors" data-page="portfolio">Referensprojekt</a>
+                    <a href="#" onclick="navigateTo('about'); return false;" class="nav-link text-sm font-semibold text-gray-400 hover:text-white transition-colors" data-page="about">Om oss</a>
+                    <a href="#" onclick="navigateTo('contact'); return false;" class="nav-link text-sm font-semibold text-gray-400 hover:text-white transition-colors" data-page="contact">Kontakt</a>
+                </nav>
+                
+                <div class="flex items-center gap-4">
+                    <button onclick="navigateTo('booking')" class="bg-white hover:bg-gray-100 text-black px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg active:scale-95">
+                        Boka kostnadsfritt hembesök
+                    </button>
+                    
+                    <!-- Mobile menu button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobileMenu" class="mobile-menu md:hidden bg-[#111418] border-t border-white/5">
+                <div class="px-6 py-4 space-y-4">
+                    <a href="#" onclick="navigateTo('home'); toggleMobileMenu(); return false;" class="block text-white font-semibold py-2">Tjänster</a>
+                    <a href="#" onclick="navigateTo('portfolio'); toggleMobileMenu(); return false;" class="block text-white font-semibold py-2">Referensprojekt</a>
+                    <a href="#" onclick="navigateTo('about'); toggleMobileMenu(); return false;" class="block text-white font-semibold py-2">Om oss</a>
+                    <a href="#" onclick="navigateTo('contact'); toggleMobileMenu(); return false;" class="block text-white font-semibold py-2">Kontakt</a>
+                </div>
+            </div>
+        </header>
+        
+        <main class="flex-grow">
+            <!-- ==================== HOME PAGE ==================== -->
+            <div id="home" class="page active">
+                <!-- Hero Section -->
+                <section class="relative pt-20 pb-32 overflow-hidden">
+                    <div class="absolute inset-0 z-0">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#050608]"></div>
+                        <img alt="Luxury Interior" class="w-full h-full object-cover opacity-30" style="filter: grayscale(0.3);" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"/>
+                    </div>
+                    <div class="max-w-[1280px] mx-auto px-6 relative z-10">
+                        <div class="max-w-3xl">
+                            <span class="text-[#f39200] font-extrabold text-sm uppercase tracking-[0.3em] mb-6 block animate-fade-in-up">Premium Inomhustjänster</span>
+                            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-gradient mb-8 animate-fade-in-up delay-100">
+                                Invändig Målning för Exklusiva Hem
+                            </h1>
+                            <p class="text-gray-300 text-xl leading-relaxed mb-10 max-w-2xl animate-fade-in-up delay-200">
+                                Vi skapar atmosfärer där varje penseldrag räknas. Från minutiöst underarbete till den perfekta slutfinishen med marknadens främsta material.
+                            </p>
+                            <div class="flex flex-wrap gap-4 animate-fade-in-up delay-300">
+                                <button onclick="navigateTo('booking')" class="bg-[#f39200] text-white px-8 py-4 rounded-full font-extrabold text-sm uppercase tracking-wider hover:brightness-110 transition-all shadow-[0_10px_30px_rgba(243,146,0,0.3)]">
+                                    Få offert på invändig målning
+                                </button>
+                                <button onclick="showToast('Färgkarta kommer snart!')" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-all backdrop-blur-md">
+                                    Se färgkarta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Process Section -->
+                <section class="py-24 bg-[#111418]/30">
+                    <div class="max-w-[1280px] mx-auto px-6">
+                        <div class="text-center mb-20">
+                            <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6">Processen: Steg för steg</h2>
+                            <p class="text-gray-400 text-lg max-w-2xl mx-auto">Vårt strukturerade arbetssätt garanterar ett dammfritt resultat med oöverträffad precision.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div class="group p-8 rounded-3xl bg-[#111418] border border-white/5 hover:border-[#009fe3]/30 transition-all hover-lift">
+                                <div class="w-14 h-14 rounded-2xl bg-[#009fe3]/10 flex items-center justify-center text-[#009fe3] mb-6 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">layers</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-4">1. Skydd & Maskering</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Vi täcker golv, möbler och snickerier minutiöst. Vi lämnar inget åt slumpen för att skydda ditt hem under hela arbetet.</p>
+                            </div>
+                            <div class="group p-8 rounded-3xl bg-[#111418] border border-white/5 hover:border-[#009fe3]/30 transition-all hover-lift">
+                                <div class="w-14 h-14 rounded-2xl bg-[#009fe3]/10 flex items-center justify-center text-[#009fe3] mb-6 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">brush</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-4">2. Underarbete</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Spackling, slipning och lagning av ojämnheter. En perfekt yta börjar alltid med ett perfekt underarbete.</p>
+                            </div>
+                            <div class="group p-8 rounded-3xl bg-[#111418] border border-white/5 hover:border-[#009fe3]/30 transition-all hover-lift">
+                                <div class="w-14 h-14 rounded-2xl bg-[#009fe3]/10 flex items-center justify-center text-[#009fe3] mb-6 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">format_paint</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-4">3. Målningsteknik</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Applicering av premiumfärg med professionella metoder för en jämn och hållbar finish som framhäver rummets karaktär.</p>
+                            </div>
+                            <div class="group p-8 rounded-3xl bg-[#111418] border border-white/5 hover:border-[#009fe3]/30 transition-all hover-lift">
+                                <div class="w-14 h-14 rounded-2xl bg-[#009fe3]/10 flex items-center justify-center text-[#009fe3] mb-6 group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined text-3xl">verified</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-4">4. Slutbesiktning</h3>
+                                <p class="text-sm text-gray-400 leading-relaxed">Vi går gemensamt igenom resultatet för att säkerställa att allt lever upp till våra strikta kvalitetskrav och din vision.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Materials Section -->
+                <section class="py-24">
+                    <div class="max-w-[1280px] mx-auto px-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                            <div>
+                                <span class="text-[#009fe3] font-extrabold text-sm uppercase tracking-[0.3em] mb-6 block">Endast det bästa</span>
+                                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-8 tracking-tight">Materialval som gör skillnad</h2>
+                                <p class="text-gray-400 text-lg leading-relaxed mb-10">
+                                    För att uppnå det absolut bästa slutresultatet samarbetar vi med ledande färgleverantörer som Nordsjö. Vi väljer material som inte bara ger en vacker yta, utan också är slitstarka och miljövänliga.
+                                </p>
+                                <div class="space-y-4">
+                                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <div class="w-8 h-8 rounded-full bg-[#009fe3]/20 flex items-center justify-center text-[#009fe3]">
+                                            <span class="material-symbols-outlined text-lg">check</span>
+                                        </div>
+                                        <span class="text-gray-200 font-medium">Högsta slitstyrka för utsatta miljöer</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <div class="w-8 h-8 rounded-full bg-[#009fe3]/20 flex items-center justify-center text-[#009fe3]">
+                                            <span class="material-symbols-outlined text-lg">check</span>
+                                        </div>
+                                        <span class="text-gray-200 font-medium">Svanenmärkta och allergivänliga alternativ</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                                        <div class="w-8 h-8 rounded-full bg-[#009fe3]/20 flex items-center justify-center text-[#009fe3]">
+                                            <span class="material-symbols-outlined text-lg">check</span>
+                                        </div>
+                                        <span class="text-gray-200 font-medium">Unik färgåtergivning och djup</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="aspect-square rounded-[3rem] overflow-hidden border border-white/10">
+                                    <img alt="Premium Finish" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1562663474-6cbb3eaa4d14?w=800&q=80"/>
+                                </div>
+                                <div class="absolute -bottom-10 -left-10 p-8 bg-[#111418] rounded-3xl border border-white/10 shadow-2xl max-w-xs">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-2">
+                                            <span class="font-black text-black text-xs uppercase text-center leading-tight">PREMIUM PARTNER</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-white font-bold text-sm">Nordsjö Professional</p>
+                                            <p class="text-gray-500 text-xs">Auktoriserad användare</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 text-xs italic leading-relaxed">"Vi använder uteslutande produkter som möter våra kunders höga krav på finish."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- CTA Section -->
+                <section class="max-w-[1280px] mx-auto px-6 py-32">
+                    <div class="relative rounded-[3rem] bg-gradient-to-br from-[#12161c] to-black border border-white/10 p-12 md:p-24 text-center overflow-hidden">
+                        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#f39200]/10 blur-[120px] rounded-full"></div>
+                        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-[#009fe3]/5 blur-[120px] rounded-full"></div>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tighter max-w-3xl">
+                                Dags för en invändig förändring?
+                            </h2>
+                            <p class="text-gray-400 text-xl mb-12 max-w-2xl">
+                                Boka ett kostnadsfritt hembesök idag så går vi igenom dina ytor och ger dig en skräddarsydd offert med fokus på kvalitet och hållbarhet.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-5">
+                                <button onclick="navigateTo('booking')" class="bg-[#f39200] text-white px-12 py-5 rounded-full font-extrabold text-lg hover:brightness-110 transition-all shadow-[0_10px_40px_rgba(243,146,0,0.4)] hover:scale-105 active:scale-95">
+                                    Få din kostnadsfria offert
+                                </button>
+                                <button onclick="navigateTo('contact')" class="bg-white/5 border border-white/10 text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-all backdrop-blur-md">
+                                    Kontakta oss
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ==================== BOOKING PAGE ==================== -->
+            <div id="booking" class="page">
+                <section class="max-w-[1280px] mx-auto px-6 py-16">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                        <div class="lg:col-span-7">
+                            <div class="mb-10">
+                                <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Boka Rådgivning & Hembesök</h1>
+                                <p class="text-gray-400 text-lg">Ta första steget mot ditt drömprojekt. Välj en tid som passar dig för en kostnadsfri genomgång på plats.</p>
+                            </div>
+                            
+                            <!-- Progress Steps -->
+                            <div class="flex items-center gap-4 mb-12 flex-wrap">
+                                <div class="flex items-center gap-3">
+                                    <span id="step1indicator" class="w-8 h-8 rounded-full bg-[#f39200] text-white flex items-center justify-center font-bold text-sm">1</span>
+                                    <span class="text-sm font-bold text-white">Projekttyp</span>
+                                </div>
+                                <div class="h-px w-8 bg-white/10"></div>
+                                <div class="flex items-center gap-3">
+                                    <span id="step2indicator" class="w-8 h-8 rounded-full bg-white/10 text-gray-500 flex items-center justify-center font-bold text-sm">2</span>
+                                    <span id="step2text" class="text-sm font-bold text-gray-500">Tid & Datum</span>
+                                </div>
+                                <div class="h-px w-8 bg-white/10"></div>
+                                <div class="flex items-center gap-3">
+                                    <span id="step3indicator" class="w-8 h-8 rounded-full bg-white/10 text-gray-500 flex items-center justify-center font-bold text-sm">3</span>
+                                    <span id="step3text" class="text-sm font-bold text-gray-500">Kontaktuppgifter</span>
+                                </div>
+                            </div>
+                            
+                            <form id="bookingForm" class="space-y-12">
+                                <!-- Step 1: Project Type -->
+                                <div id="bookingStep1" class="space-y-6">
+                                    <h3 class="text-xl font-bold text-white">Vad behöver du hjälp med?</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <label class="relative group cursor-pointer">
+                                            <input checked name="project_type" type="radio" value="interior" class="peer sr-only"/>
+                                            <div class="p-6 rounded-2xl bg-[#111418] border border-white/5 peer-checked:border-[#f39200] peer-checked:bg-[#f39200]/5 transition-all">
+                                                <div class="flex items-center justify-between mb-4">
+                                                    <span class="material-symbols-outlined text-[#f39200] text-3xl">home</span>
+                                                    <div class="w-5 h-5 rounded-full border-2 border-white/10 peer-checked:border-[#f39200] flex items-center justify-center">
+                                                        <div class="w-2 h-2 bg-[#f39200] rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                                    </div>
+                                                </div>
+                                                <h4 class="text-white font-bold text-lg mb-1">Invändig Målning</h4>
+                                                <p class="text-sm text-gray-400">Väggar, tak, snickerier och renovering av rum.</p>
+                                            </div>
+                                        </label>
+                                        <label class="relative group cursor-pointer">
+                                            <input name="project_type" type="radio" value="exterior" class="peer sr-only"/>
+                                            <div class="p-6 rounded-2xl bg-[#111418] border border-white/5 peer-checked:border-[#f39200] peer-checked:bg-[#f39200]/5 transition-all">
+                                                <div class="flex items-center justify-between mb-4">
+                                                    <span class="material-symbols-outlined text-[#009fe3] text-3xl">deck</span>
+                                                    <div class="w-5 h-5 rounded-full border-2 border-white/10 peer-checked:border-[#f39200] flex items-center justify-center">
+                                                        <div class="w-2 h-2 bg-[#f39200] rounded-full opacity-0 peer-checked:opacity-100"></div>
+                                                    </div>
+                                                </div>
+                                                <h4 class="text-white font-bold text-lg mb-1">Utvändig Målning</h4>
+                                                <p class="text-sm text-gray-400">Fasad, fönster, tak och altanlasering.</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- Step 2: Date Selection -->
+                                <div id="bookingStep2" class="space-y-6">
+                                    <h3 class="text-xl font-bold text-white">Välj datum för hembesök</h3>
+                                    <div class="bg-[#111418] border border-white/5 rounded-3xl p-6">
+                                        <div class="flex items-center justify-between mb-8 px-2">
+                                            <h4 id="calendarMonth" class="text-lg font-bold text-white">Januari 2025</h4>
+                                            <div class="flex gap-2">
+                                                <button type="button" onclick="changeMonth(-1)" class="p-2 rounded-full hover:bg-white/5 text-gray-400 transition-colors">
+                                                    <span class="material-symbols-outlined">chevron_left</span>
+                                                </button>
+                                                <button type="button" onclick="changeMonth(1)" class="p-2 rounded-full hover:bg-white/5 text-gray-400 transition-colors">
+                                                    <span class="material-symbols-outlined">chevron_right</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="calendar-grid gap-2 text-center mb-4">
+                                            <div class="text-xs text-gray-500 font-bold py-2">MÅN</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">TIS</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">ONS</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">TOR</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">FRE</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">LÖR</div>
+                                            <div class="text-xs text-gray-500 font-bold py-2">SÖN</div>
+                                        </div>
+                                        <div id="calendarDays" class="calendar-grid gap-2 text-center">
+                                            <!-- Days will be generated by JavaScript -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="timeSlots" class="hidden">
+                                        <p class="text-sm text-gray-400 mb-4">Tillgängliga tider för <span id="selectedDateText" class="text-white font-bold"></span></p>
+                                        <div class="flex flex-wrap gap-3">
+                                            <button type="button" onclick="selectTime('09:00')" class="time-slot px-6 py-3 rounded-xl bg-[#111418] border border-white/10 text-white font-semibold hover:bg-white/5 transition-all">09:00</button>
+                                            <button type="button" onclick="selectTime('10:30')" class="time-slot px-6 py-3 rounded-xl bg-[#111418] border border-white/10 text-white font-semibold hover:bg-white/5 transition-all">10:30</button>
+                                            <button type="button" onclick="selectTime('13:00')" class="time-slot px-6 py-3 rounded-xl bg-[#111418] border border-white/10 text-white font-semibold hover:bg-white/5 transition-all">13:00</button>
+                                            <button type="button" onclick="selectTime('15:30')" class="time-slot px-6 py-3 rounded-xl bg-[#111418] border border-white/10 text-white font-semibold hover:bg-white/5 transition-all">15:30</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Step 3: Contact Info -->
+                                <div id="bookingStep3" class="space-y-6">
+                                    <h3 class="text-xl font-bold text-white">Kontaktuppgifter</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Namn</label>
+                                            <input type="text" id="bookingName" placeholder="För- och efternamn" class="w-full bg-[#111418] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                        </div>
+                                        <div>
+                                            <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Telefon</label>
+                                            <input type="tel" id="bookingPhone" placeholder="07x-xxx xx xx" class="w-full bg-[#111418] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">E-post</label>
+                                        <input type="email" id="bookingEmail" placeholder="namn@exempel.se" class="w-full bg-[#111418] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Adress</label>
+                                        <input type="text" id="bookingAddress" placeholder="Gatuadress och postnummer" class="w-full bg-[#111418] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="w-full bg-[#f39200] text-white px-8 py-5 rounded-full font-extrabold text-lg hover:brightness-110 transition-all shadow-[0_10px_30px_rgba(243,146,0,0.3)]">
+                                    Bekräfta Bokning
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Sidebar -->
+                        <div class="lg:col-span-5">
+                            <div class="sticky top-32 bg-gradient-to-br from-[#111418] to-black border border-white/10 rounded-[2rem] p-8 md:p-10">
+                                <h3 class="text-2xl font-bold text-white mb-8">Vad du kan förvänta dig</h3>
+                                <ul class="space-y-8">
+                                    <li class="flex gap-5">
+                                        <div class="w-12 h-12 rounded-2xl bg-[#f39200]/10 border border-[#f39200]/20 flex items-center justify-center text-[#f39200] shrink-0">
+                                            <span class="material-symbols-outlined">architecture</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-bold mb-1">Mätning & Analys</h4>
+                                            <p class="text-sm text-gray-400 leading-relaxed">Vi mäter ytor noggrant och analyserar underlagets skick för ett perfekt slutresultat.</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex gap-5">
+                                        <div class="w-12 h-12 rounded-2xl bg-[#009fe3]/10 border border-[#009fe3]/20 flex items-center justify-center text-[#009fe3] shrink-0">
+                                            <span class="material-symbols-outlined">palette</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-bold mb-1">Färgrådgivning</h4>
+                                            <p class="text-sm text-gray-400 leading-relaxed">Våra hantverkare hjälper dig att välja rätt färgkoder och glansgrader anpassat efter ljus och miljö.</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex gap-5">
+                                        <div class="w-12 h-12 rounded-2xl bg-[#89d1f5]/10 border border-[#89d1f5]/20 flex items-center justify-center text-[#89d1f5] shrink-0">
+                                            <span class="material-symbols-outlined">request_quote</span>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-bold mb-1">Offert inom 24 h</h4>
+                                            <p class="text-sm text-gray-400 leading-relaxed">Efter hembesöket får du en detaljerad och transparent offert inom 24 timmar. Inga dolda kostnader.</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-12 pt-10 border-t border-white/10">
+                                    <div class="flex items-center gap-4 mb-6">
+                                        <div class="flex -space-x-3">
+                                            <div class="w-10 h-10 rounded-full border-2 border-[#050608] bg-gradient-to-br from-[#f39200] to-[#009fe3] flex items-center justify-center text-white font-bold text-xs">A</div>
+                                            <div class="w-10 h-10 rounded-full border-2 border-[#050608] bg-gradient-to-br from-[#009fe3] to-[#89d1f5] flex items-center justify-center text-white font-bold text-xs">B</div>
+                                            <div class="w-10 h-10 rounded-full border-2 border-[#050608] bg-gray-800 flex items-center justify-center text-[10px] font-bold text-white">+12</div>
+                                        </div>
+                                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Bokade den senaste veckan</span>
+                                    </div>
+                                    <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                                        <div class="flex text-[#f39200] mb-3">
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                            <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        </div>
+                                        <p class="text-sm text-gray-300 italic">"Hembesöket var otroligt proffsigt. Vi fick hjälp med färgsättning som vi aldrig tänkt på själva."</p>
+                                        <p class="text-xs font-bold text-white mt-4">— Emma & Viktor, Bromma</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-center gap-8 py-4 px-8 border border-white/5 rounded-2xl bg-[#111418]/50 mt-8">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[#f39200] text-xl fill-1">verified_user</span>
+                                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Trygg Hansa Försäkrad</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ==================== ABOUT PAGE ==================== -->
+            <div id="about" class="page">
+                <section class="max-w-[1280px] mx-auto px-6 pt-24 pb-32">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                        <div>
+                            <span class="text-[#f39200] font-extrabold text-sm uppercase tracking-[0.3em] mb-6 block">Vilka vi är</span>
+                            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-gradient mb-8">
+                                Passion för färg & nordiskt hantverk
+                            </h1>
+                            <p class="text-gray-400 text-xl leading-relaxed mb-10">
+                                Trenad Nordic Måleri grundades med en enkel vision: att förena traditionellt svenskt målerihantverk med modern effektivitet och personlig service. Idag är vi ett av Stockholms mest betrodda val för exklusiva hem och kommersiella fastigheter.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="p-6 bg-[#111418] rounded-2xl border border-white/10 group hover:border-[#f39200]/50 transition-colors hover-lift">
+                                    <div class="w-12 h-12 rounded-xl bg-[#f39200]/10 flex items-center justify-center text-[#f39200] mb-4">
+                                        <span class="material-symbols-outlined fill-1">verified</span>
+                                    </div>
+                                    <h3 class="text-white font-bold mb-2">Expertis</h3>
+                                    <p class="text-sm text-gray-500">Varje penseldrag utförs av certifierade yrkesmålare med mångårig erfarenhet.</p>
+                                </div>
+                                <div class="p-6 bg-[#111418] rounded-2xl border border-white/10 group hover:border-[#009fe3]/50 transition-colors hover-lift">
+                                    <div class="w-12 h-12 rounded-xl bg-[#009fe3]/10 flex items-center justify-center text-[#009fe3] mb-4">
+                                        <span class="material-symbols-outlined fill-1">eco</span>
+                                    </div>
+                                    <h3 class="text-white font-bold mb-2">Hållbarhet</h3>
+                                    <p class="text-sm text-gray-500">Vi arbetar uteslutande med Svanenmärkta produkter och minimerar vårt miljöavtryck.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="aspect-square rounded-3xl overflow-hidden border border-white/10 relative z-10">
+                                <img alt="Hantverk i fokus" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80"/>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-8 left-8 right-8">
+                                    <div class="p-6 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10">
+                                        <p class="text-white font-medium italic">"Vi säljer inte bara färg på väggar, vi skapar miljöer där människor trivs och fastigheter ökar i värde."</p>
+                                        <p class="text-[#f39200] text-sm font-bold mt-4">— Grundare, Trenad Nordic</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute -top-10 -right-10 w-64 h-64 bg-[#f39200]/20 blur-[100px] rounded-full"></div>
+                            <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-[#009fe3]/20 blur-[100px] rounded-full"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Team Section -->
+                <section class="bg-[#111418]/30 py-32 border-y border-white/5">
+                    <div class="max-w-[1280px] mx-auto px-6">
+                        <div class="text-center max-w-3xl mx-auto mb-20">
+                            <span class="text-[#009fe3] font-extrabold text-sm uppercase tracking-[0.3em] mb-4 block">Vårt Team</span>
+                            <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">Människorna bakom hantverket</h2>
+                            <p class="text-gray-400 text-lg">Våra medarbetare är vår största tillgång. Ett sammansvetsat team av specialister som delar samma kärlek för detaljer.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div class="group hover-lift">
+                                <div class="aspect-[4/5] rounded-2xl overflow-hidden mb-6 relative bg-gradient-to-br from-[#f39200]/20 to-[#009fe3]/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-8xl text-white/30">person</span>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60"></div>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Erik Andersson</h3>
+                                <p class="text-[#f39200] font-semibold text-sm uppercase tracking-wider mb-4">VD & Projektledare</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Expert på färgsättning och projektstyrning med 18 år i branschen.</p>
+                            </div>
+                            <div class="group hover-lift">
+                                <div class="aspect-[4/5] rounded-2xl overflow-hidden mb-6 relative bg-gradient-to-br from-[#009fe3]/20 to-[#89d1f5]/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-8xl text-white/30">person</span>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60"></div>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Linda Berg</h3>
+                                <p class="text-[#f39200] font-semibold text-sm uppercase tracking-wider mb-4">Seniormålare</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Specialist på dekorationsmåleri och restaurering av historiska miljöer.</p>
+                            </div>
+                            <div class="group hover-lift">
+                                <div class="aspect-[4/5] rounded-2xl overflow-hidden mb-6 relative bg-gradient-to-br from-[#89d1f5]/20 to-[#f39200]/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-8xl text-white/30">person</span>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60"></div>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Mikael Nilsson</h3>
+                                <p class="text-[#f39200] font-semibold text-sm uppercase tracking-wider mb-4">Arbetsledare Exteriör</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Ansvarig för våra största fasadprojekt med fokus på hållbara fasadsystem.</p>
+                            </div>
+                            <div class="group hover-lift">
+                                <div class="aspect-[4/5] rounded-2xl overflow-hidden mb-6 relative bg-gradient-to-br from-[#f39200]/20 to-[#89d1f5]/20 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-8xl text-white/30">person</span>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#050608] via-transparent to-transparent opacity-60"></div>
+                                </div>
+                                <h3 class="text-xl font-bold text-white mb-1">Sofia Lindqvist</h3>
+                                <p class="text-[#f39200] font-semibold text-sm uppercase tracking-wider mb-4">Projektkoordinator</p>
+                                <p class="text-gray-500 text-sm leading-relaxed">Håller ihop alla projekt och ser till att kommunikationen flyter smidigt.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Partners Section -->
+                <section class="py-24">
+                    <div class="max-w-[1280px] mx-auto px-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                            <div class="lg:col-span-4">
+                                <h2 class="text-3xl font-extrabold text-white mb-6">Trygghet i varje penseldrag</h2>
+                                <p class="text-gray-400 mb-8">Vi är stolta medlemmar i branschens ledande organisationer. Det är din garanti för att arbetet utförs fackmannamässigt och enligt gällande regler.</p>
+                                <div class="flex flex-wrap gap-4">
+                                    <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-xs font-bold text-gray-300 uppercase tracking-widest">Målarmästarna</div>
+                                    <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-xs font-bold text-gray-300 uppercase tracking-widest">Säker Vatten</div>
+                                    <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-xs font-bold text-gray-300 uppercase tracking-widest">ID06</div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-8">
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-50 hover:opacity-100 transition-opacity duration-500">
+                                    <div class="h-24 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                                        <span class="text-white font-black text-xl tracking-tighter">Målarmästarna</span>
+                                    </div>
+                                    <div class="h-24 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                                        <span class="text-white font-black text-xl tracking-tighter">Nordsjö</span>
+                                    </div>
+                                    <div class="h-24 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                                        <span class="text-white font-black text-xl tracking-tighter">Jotun</span>
+                                    </div>
+                                    <div class="h-24 bg-white/5 rounded-2xl flex items-center justify-center border border-white/5">
+                                        <span class="text-white font-black text-xl tracking-tighter">Festo</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- CTA -->
+                <section class="max-w-[1280px] mx-auto px-6 pb-32">
+                    <div class="relative rounded-[2.5rem] bg-gradient-to-br from-[#12161c] to-black border border-white/10 p-12 md:p-24 text-center overflow-hidden">
+                        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#f39200]/10 blur-[120px] rounded-full"></div>
+                        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-[#009fe3]/5 blur-[120px] rounded-full"></div>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tighter max-w-3xl">
+                                Redo att starta ditt nästa projekt?
+                            </h2>
+                            <p class="text-gray-400 text-xl mb-12 max-w-2xl">
+                                Oavsett om det gäller en liten hall eller en hel fastighet, står Trenad Nordic Måleri redo att hjälpa dig. Kontakta oss för en kostnadsfri konsultation.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-5">
+                                <button onclick="navigateTo('booking')" class="bg-[#f39200] text-white px-12 py-5 rounded-full font-extrabold text-lg hover:brightness-110 transition-all shadow-[0_10px_40px_rgba(243,146,0,0.4)] hover:scale-105 active:scale-95">
+                                    Boka kostnadsfritt hembesök
+                                </button>
+                                <button onclick="navigateTo('portfolio')" class="bg-white/5 border border-white/10 text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-all backdrop-blur-md">
+                                    Se våra referensprojekt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ==================== PORTFOLIO PAGE ==================== -->
+            <div id="portfolio" class="page">
+                <section class="max-w-[1280px] mx-auto px-6 pt-20 pb-12">
+                    <div class="flex flex-col gap-6 max-w-3xl">
+                        <span class="text-[#f39200] font-extrabold text-sm uppercase tracking-[0.3em]">Portfölj & Hantverk</span>
+                        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[1.1] text-gradient">
+                            Våra senaste förvandlingar
+                        </h1>
+                        <p class="text-gray-400 text-xl leading-relaxed">
+                            Upptäck hur Trenad Nordic Måleri lyfter fastigheter genom precision, kvalitet och nordisk design. Från anrika Östermalm till moderna villor i skärgården.
+                        </p>
+                    </div>
+                </section>
+                
+                <!-- Filter Buttons -->
+                <section class="max-w-[1280px] mx-auto px-6 mb-12">
+                    <div class="flex gap-3 flex-wrap">
+                        <button onclick="filterProjects('all')" class="filter-btn active px-8 py-3 rounded-full bg-[#f39200] text-white font-bold text-sm shadow-[0_4px_20px_rgba(243,146,0,0.4)] hover:brightness-110 transition-all" data-filter="all">Alla projekt</button>
+                        <button onclick="filterProjects('exterior')" class="filter-btn px-8 py-3 rounded-full bg-[#111418] text-gray-300 font-semibold text-sm border border-white/10 hover:bg-white/5 hover:text-white transition-all" data-filter="exterior">Exteriör</button>
+                        <button onclick="filterProjects('interior')" class="filter-btn px-8 py-3 rounded-full bg-[#111418] text-gray-300 font-semibold text-sm border border-white/10 hover:bg-white/5 hover:text-white transition-all" data-filter="interior">Interiör</button>
+                        <button onclick="filterProjects('window')" class="filter-btn px-8 py-3 rounded-full bg-[#111418] text-gray-300 font-semibold text-sm border border-white/10 hover:bg-white/5 hover:text-white transition-all" data-filter="window">Fönsterrenovering</button>
+                    </div>
+                </section>
+                
+                <!-- Projects -->
+                <section class="max-w-[1280px] mx-auto px-6 pb-32 space-y-24">
+                    <!-- Project 1 -->
+                    <div class="project-item grid grid-cols-1 lg:grid-cols-12 gap-16 items-center" data-category="exterior">
+                        <div class="lg:col-span-7 relative group">
+                            <div class="relative aspect-[16/10] overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-black">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80" class="w-full h-full object-cover" alt="Efter"/>
+                                <div class="absolute top-6 left-6 bg-black/60 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Före</div>
+                                <div class="absolute top-6 right-6 bg-[#009fe3] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Efter</div>
+                            </div>
+                            <div class="absolute -z-10 -bottom-6 -right-6 w-full h-full border-2 border-[#009fe3]/10 rounded-3xl"></div>
+                        </div>
+                        <div class="lg:col-span-5 flex flex-col">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="w-10 h-px bg-[#009fe3]"></span>
+                                <span class="text-[#009fe3] font-bold text-xs uppercase tracking-widest">Exteriör - Saltsjöbaden</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-bold mb-6 text-white tracking-tight">Fasadrenovering Villa</h3>
+                            <p class="text-gray-400 mb-8 leading-relaxed text-lg">
+                                En omfattande restaurering där Trenad Nordic Måleri återställde träpanelens forna glans med moderna material anpassade för tufft skärgårdsklimat.
+                            </p>
+                            <div class="grid grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">Utförande</p>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Grundlig olpning</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Byte av fasadpanel</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Specialmålning snickerier</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">Premiumval</p>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">star</span> Nordsjö One Super</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">star</span> Svanenmärkt färg</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                                <p class="text-sm text-gray-300 italic mb-3">"Trenad Nordic levererade exakt det vi önskade. Arbetet utfördes snabbt och med en otrolig känsla för detaljer."</p>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs font-bold text-white">— Johan Falk</p>
+                                    <div class="flex text-[#f39200]">
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-item grid grid-cols-1 lg:grid-cols-12 gap-16 items-center" data-category="interior">
+                        <div class="lg:col-span-5 flex flex-col lg:order-1 order-2">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="w-10 h-px bg-[#f39200]"></span>
+                                <span class="text-[#f39200] font-bold text-xs uppercase tracking-widest">Interiör - Vasastan</span>
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-bold mb-6 text-white tracking-tight">Sekelskiftesvåning</h3>
+                            <p class="text-gray-400 mb-8 leading-relaxed text-lg">
+                                Från mörka och slitna väggar till en sofistikerad och luftig atmosfär som lyfter fram bostadens historiska detaljer.
+                            </p>
+                            <div class="grid grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">Metod</p>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Bredspackling</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Restaureringsstuckatur</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">check</span> Färgsättning</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-2">Material</p>
+                                    <ul class="space-y-2 text-sm text-gray-300">
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">star</span> Helmatt Finish</li>
+                                        <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[#f39200] text-sm">star</span> Linoljefärg</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="p-6 bg-white/5 rounded-2xl border border-white/5">
+                                <p class="text-sm text-gray-300 italic mb-3">"Hela processen var proffsig från första mötet. Resultatet på våra gamla dörrar är magiskt."</p>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-xs font-bold text-white">— Maria Eklund</p>
+                                    <div class="flex text-[#f39200]">
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                        <span class="material-symbols-outlined text-sm fill-1">star</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-7 relative group lg:order-2 order-1">
+                            <div class="relative aspect-[16/10] overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-black">
+                                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80" class="w-full h-full object-cover" alt="Interiör"/>
+                                <div class="absolute top-6 left-6 bg-black/60 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Före</div>
+                                <div class="absolute top-6 right-6 bg-[#009fe3] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Efter</div>
+                            </div>
+                            <div class="absolute -z-10 -bottom-6 -left-6 w-full h-full border-2 border-[#009fe3]/10 rounded-3xl"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Stats Section -->
+                <section class="bg-[#111418] py-24 border-y border-white/5">
+                    <div class="max-w-[1280px] mx-auto px-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                            <div class="flex flex-col gap-2">
+                                <span class="text-4xl md:text-5xl font-extrabold text-white">500+</span>
+                                <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Nöjda Kunder</span>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="text-4xl md:text-5xl font-extrabold text-white">15</span>
+                                <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Års Erfarenhet</span>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="text-4xl md:text-5xl font-extrabold text-white">100%</span>
+                                <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Garanti</span>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="text-4xl md:text-5xl font-extrabold text-white">2k+</span>
+                                <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Färgkoder</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- CTA -->
+                <section class="max-w-[1280px] mx-auto px-6 py-32">
+                    <div class="relative rounded-[2.5rem] bg-gradient-to-br from-[#12161c] to-black border border-white/10 p-12 md:p-24 text-center overflow-hidden">
+                        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#f39200]/10 blur-[120px] rounded-full"></div>
+                        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-[#009fe3]/5 blur-[120px] rounded-full"></div>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <div class="inline-flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/10 mb-8">
+                                <span class="w-2 h-2 bg-[#f39200] rounded-full animate-pulse"></span>
+                                <span class="text-xs font-bold text-white uppercase tracking-widest">Vi har lediga tider för höstprojekt</span>
+                            </div>
+                            <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tighter max-w-3xl">
+                                Ska vi förvandla ditt hem härnäst?
+                            </h2>
+                            <p class="text-gray-400 text-xl mb-12 max-w-2xl">
+                                Låt Trenad Nordic Måleri förverkliga dina visioner. Vi erbjuder personlig rådgivning och en tydlig offert helt utan förpliktelser.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-5">
+                                <button onclick="navigateTo('booking')" class="bg-[#f39200] text-white px-12 py-5 rounded-full font-extrabold text-lg hover:brightness-110 transition-all shadow-[0_10px_40px_rgba(243,146,0,0.4)] hover:scale-105 active:scale-95">
+                                    Få din kostnadsfria offert nu
+                                </button>
+                                <button onclick="navigateTo('contact')" class="bg-white/5 border border-white/10 text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-all backdrop-blur-md">
+                                    Kontakta Kundservice
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- ==================== CONTACT PAGE ==================== -->
+            <div id="contact" class="page">
+                <section class="max-w-[1280px] mx-auto px-6 py-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                        <div>
+                            <span class="text-[#f39200] font-extrabold text-sm uppercase tracking-[0.3em] mb-6 block">Kontakta oss</span>
+                            <h1 class="text-5xl md:text-6xl font-extrabold tracking-tighter leading-[1.1] text-gradient mb-8">
+                                Vi finns här för dig
+                            </h1>
+                            <p class="text-gray-400 text-xl leading-relaxed mb-12">
+                                Har du frågor om våra tjänster eller vill diskutera ett projekt? Tveka inte att höra av dig – vi svarar alltid inom 24 timmar.
+                            </p>
+                            
+                            <div class="space-y-8">
+                                <div class="flex items-start gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-[#f39200]/10 border border-[#f39200]/20 flex items-center justify-center text-[#f39200] shrink-0">
+                                        <span class="material-symbols-outlined">location_on</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-bold text-lg mb-2">Besöksadress</h3>
+                                        <p class="text-gray-400">Hemvärnsgatan 15</p>
+                                        <p class="text-gray-400">171 54 Solna</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-[#009fe3]/10 border border-[#009fe3]/20 flex items-center justify-center text-[#009fe3] shrink-0">
+                                        <span class="material-symbols-outlined">mail</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-bold text-lg mb-2">E-post</h3>
+                                        <p class="text-gray-400">info@trenadnordic.se</p>
+                                        <p class="text-gray-400">offert@trenadnordic.se</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-6">
+                                    <div class="w-14 h-14 rounded-2xl bg-[#89d1f5]/10 border border-[#89d1f5]/20 flex items-center justify-center text-[#89d1f5] shrink-0">
+                                        <span class="material-symbols-outlined">phone</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-white font-bold text-lg mb-2">Telefon</h3>
+                                        <p class="text-gray-400">08-123 456 78</p>
+                                        <p class="text-gray-500 text-sm">Mån-Fre 08:00-17:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-[#111418] rounded-[2rem] border border-white/10 p-8 md:p-12">
+                            <h2 class="text-2xl font-bold text-white mb-8">Skicka ett meddelande</h2>
+                            <form id="contactForm" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Namn</label>
+                                        <input type="text" id="contactName" placeholder="Ditt namn" class="w-full bg-[#050608] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Telefon</label>
+                                        <input type="tel" id="contactPhone" placeholder="07x-xxx xx xx" class="w-full bg-[#050608] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">E-post</label>
+                                    <input type="email" id="contactEmail" placeholder="din@email.se" class="w-full bg-[#050608] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none"/>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Ämne</label>
+                                    <select id="contactSubject" class="w-full bg-[#050608] border border-white/10 rounded-xl px-5 py-4 text-white focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none">
+                                        <option value="">Välj ämne...</option>
+                                        <option value="offert">Offertförfrågan</option>
+                                        <option value="project">Pågående projekt</option>
+                                        <option value="support">Kundservice</option>
+                                        <option value="other">Övrigt</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">Meddelande</label>
+                                    <textarea id="contactMessage" rows="5" placeholder="Beskriv ditt ärende..." class="w-full bg-[#050608] border border-white/10 rounded-xl px-5 py-4 text-white placeholder-gray-500 focus:border-[#f39200] focus:ring-1 focus:ring-[#f39200] transition-all outline-none resize-none"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-[#f39200] text-white px-8 py-5 rounded-full font-extrabold text-lg hover:brightness-110 transition-all shadow-[0_10px_30px_rgba(243,146,0,0.3)]">
+                                    Skicka meddelande
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Map -->
+                <section class="max-w-[1280px] mx-auto px-6 pb-24">
+                    <div class="rounded-3xl overflow-hidden border border-white/10 h-[400px] relative">
+                        <iframe 
+                            src="https://www.google.com/maps?q=Hemvärnsgatan+15,+171+54+Solna,+Sweden&output=embed"
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; filter: grayscale(80%) invert(92%) contrast(83%);" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        <div class="absolute bottom-4 left-4 bg-[#111418]/90 backdrop-blur-md rounded-xl px-4 py-3 border border-white/10">
+                            <p class="text-white font-bold text-sm">Trenad Nordic Måleri</p>
+                            <p class="text-gray-400 text-xs">Hemvärnsgatan 15, 171 54 Solna</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-black border-t border-white/5 py-20">
+            <div class="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-16">
+                <div class="md:col-span-4">
+                    <a href="#" onclick="navigateTo('home'); return false;" class="flex items-center gap-4 mb-8">
+                        <img src="data:image/png;base64,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" alt="Trenad Nordic Måleri" class="h-10 w-auto"/>
+                        <div class="flex flex-col leading-none">
+                            <span class="text-lg font-extrabold tracking-tight text-white uppercase">Trenad Nordic</span>
+                            <span class="text-[10px] tracking-[0.2em] font-medium text-[#f39200] uppercase">Måleri</span>
+                        </div>
+                    </a>
+                    <p class="text-gray-400 leading-relaxed mb-8">
+                        Trenad Nordic Måleri levererar hantverk i världsklass för medvetna kunder. Vi förvandlar interiörer med passion och precision i hela Storstockholm.
+                    </p>
+                    <div class="flex gap-4">
+                        <a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#f39200] transition-colors border border-white/10" href="#">
+                            <span class="material-symbols-outlined text-[20px]">group</span>
+                        </a>
+                        <a class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-[#f39200] transition-colors border border-white/10" href="#">
+                            <span class="material-symbols-outlined text-[20px]">share</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <h3 class="text-white font-bold mb-8 uppercase text-xs tracking-[0.2em]">Tjänster</h3>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('home')">Utvändig målning</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('home')">Invändig målning</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('home')">Fönsterrenovering</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('home')">Färgsättning</a></li>
+                    </ul>
+                </div>
+                <div class="md:col-span-2">
+                    <h3 class="text-white font-bold mb-8 uppercase text-xs tracking-[0.2em]">Snabblänkar</h3>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('portfolio')">Referensprojekt</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('about')">Om Nordic Måleri</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="showToast('Kvalitetspolicy kommer snart')">Kvalitetspolicy</a></li>
+                        <li><a class="hover:text-[#f39200] transition-colors cursor-pointer" onclick="navigateTo('contact')">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div class="md:col-span-4">
+                    <h3 class="text-white font-bold mb-8 uppercase text-xs tracking-[0.2em]">Kontaktuppgifter</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-[#f39200]/10 flex items-center justify-center text-[#f39200] shrink-0 border border-[#f39200]/20">
+                                <span class="material-symbols-outlined text-[20px]">location_on</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-semibold text-sm">Huvudkontor</p>
+                                <p class="text-gray-400 text-xs">Hemvärnsgatan 15, 171 54 Solna</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-[#f39200]/10 flex items-center justify-center text-[#f39200] shrink-0 border border-[#f39200]/20">
+                                <span class="material-symbols-outlined text-[20px]">mail</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-semibold text-sm">Offertförfrågan</p>
+                                <p class="text-gray-400 text-xs">info@trenadnordic.se</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-[1280px] mx-auto px-6 mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-xs text-gray-500">
+                    © 2025 Trenad Nordic Måleri AB. Kvalitetssäkrad av Målarmästarna.
+                </p>
+                <div class="flex gap-8 text-xs text-gray-500">
+                    <a class="hover:text-white transition-colors cursor-pointer" onclick="showToast('Integritetspolicy kommer snart')">Integritetspolicy</a>
+                    <a class="hover:text-white transition-colors cursor-pointer" onclick="showToast('Cookie-policy kommer snart')">Cookies</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <p id="toastMessage" class="text-white font-semibold"></p>
+    </div>
+    
+    <script>
+        // ==================== NAVIGATION ====================
+        let currentPage = 'home';
+        
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            // Show selected page
+            const pageElement = document.getElementById(page);
+            if (pageElement) {
+                setTimeout(() => {
+                    pageElement.classList.add('active');
+                }, 50);
+            }
+            
+            // Update navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-[#f39200]', 'font-bold');
+                link.classList.add('text-gray-400', 'font-semibold');
+                if (link.dataset.page === page) {
+                    link.classList.remove('text-gray-400', 'font-semibold');
+                    link.classList.add('text-[#f39200]', 'font-bold');
+                }
+            });
+            
+            currentPage = page;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Initialize calendar if booking page
+            if (page === 'booking') {
+                initCalendar();
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+        }
+        
+        // ==================== TOAST ====================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // ==================== CALENDAR ====================
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let selectedDate = null;
+        let selectedTime = null;
+        
+        const monthNames = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
+                           'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'];
+        
+        function initCalendar() {
+            renderCalendar();
+        }
+        
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            const calendarMonth = document.getElementById('calendarMonth');
+            
+            calendarMonth.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
+            
+            let html = '';
+            
+            // Empty cells before first day
+            for (let i = 0; i < adjustedFirstDay; i++) {
+                html += '<div class="py-3"></div>';
+            }
+            
+            // Days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const isPast = date < today && !(date.toDateString() === today.toDateString());
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
+                
+                let classes = 'py-3 rounded-xl cursor-pointer transition-all font-semibold ';
+                
+                if (isPast || isWeekend) {
+                    classes += 'text-gray-600 cursor-not-allowed';
+                } else if (isSelected) {
+                    classes += 'bg-[#f39200] text-white';
+                } else {
+                    classes += 'text-white hover:bg-white/10';
+                }
+                
+                html += `<div class="${classes}" onclick="selectDate(${day}, ${!isPast && !isWeekend})">${day}</div>`;
+            }
+            
+            calendarDays.innerHTML = html;
+        }
+        
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+        
+        function selectDate(day, isAvailable) {
+            if (!isAvailable) return;
+            
+            selectedDate = new Date(currentYear, currentMonth, day);
+            renderCalendar();
+            
+            // Show time slots
+            const timeSlots = document.getElementById('timeSlots');
+            const selectedDateText = document.getElementById('selectedDateText');
+            selectedDateText.textContent = `${day} ${monthNames[currentMonth]}`;
+            timeSlots.classList.remove('hidden');
+            
+            // Update step indicator
+            document.getElementById('step2indicator').classList.remove('bg-white/10', 'text-gray-500');
+            document.getElementById('step2indicator').classList.add('bg-[#f39200]', 'text-white');
+            document.getElementById('step2text').classList.remove('text-gray-500');
+            document.getElementById('step2text').classList.add('text-white');
+        }
+        
+        function selectTime(time) {
+            selectedTime = time;
+            
+            // Update time slot styling
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('bg-[#f39200]', 'border-[#f39200]');
+                slot.classList.add('bg-[#111418]', 'border-white/10');
+            });
+            event.target.classList.remove('bg-[#111418]', 'border-white/10');
+            event.target.classList.add('bg-[#f39200]', 'border-[#f39200]');
+            
+            // Update step indicator
+            document.getElementById('step3indicator').classList.remove('bg-white/10', 'text-gray-500');
+            document.getElementById('step3indicator').classList.add('bg-[#f39200]', 'text-white');
+            document.getElementById('step3text').classList.remove('text-gray-500');
+            document.getElementById('step3text').classList.add('text-white');
+        }
+        
+        // ==================== FORMS ====================
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('bookingName').value;
+            const phone = document.getElementById('bookingPhone').value;
+            const email = document.getElementById('bookingEmail').value;
+            const address = document.getElementById('bookingAddress').value;
+            
+            if (!name || !phone || !email || !address) {
+                showToast('Vänligen fyll i alla fält');
+                return;
+            }
+            
+            if (!selectedDate || !selectedTime) {
+                showToast('Vänligen välj datum och tid');
+                return;
+            }
+            
+            showToast(`Tack ${name}! Din bokning för ${selectedDate.getDate()} ${monthNames[selectedDate.getMonth()]} kl ${selectedTime} är mottagen!`);
+            
+            // Reset form
+            this.reset();
+            selectedDate = null;
+            selectedTime = null;
+            document.getElementById('timeSlots').classList.add('hidden');
+            initCalendar();
+        });
+        
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            if (!name || !email || !message) {
+                showToast('Vänligen fyll i alla obligatoriska fält');
+                return;
+            }
+            
+            showToast(`Tack ${name}! Ditt meddelande har skickats. Vi återkommer inom 24 timmar.`);
+            this.reset();
+        });
+        
+        // ==================== PORTFOLIO FILTER ====================
+        function filterProjects(category) {
+            // Update buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-[#f39200]', 'text-white', 'shadow-[0_4px_20px_rgba(243,146,0,0.4)]');
+                btn.classList.add('bg-[#111418]', 'text-gray-300');
+            });
+            event.target.classList.remove('bg-[#111418]', 'text-gray-300');
+            event.target.classList.add('bg-[#f39200]', 'text-white', 'shadow-[0_4px_20px_rgba(243,146,0,0.4)]');
+            
+            // Filter projects
+            document.querySelectorAll('.project-item').forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'grid';
+                    item.style.opacity = '0';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                    }, 100);
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize on home page
+            navigateTo('home');
+        });
+    </script>
+</body>
+</html>
